@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <section style="margin-top: 100px; height: 100vh; background-color: yellow;">
+    <h1>TOP SECTION</h1>
+  </section>
+  <video
+    id="video"
+    data-testid="video-asset"
+    style="width:100%;height:auto"
+    src="https://media.istockphoto.com/videos/small-cascading-creek-video-id1321347364"
+    alt="Lạch tầng nhỏ - Trả phí Bản quyền Một lần Rừng Stock Footage Video"
+    controls=""
+    controlslist="nodownload"
+    autoplay=""
+    muted="muted"
+    loop="">
+  </video>
+  <section style="margin-top: 100px; height: 100vh; background-color: red;">
+    <h1>BOTTOM SECTION</h1>
+  </section>
+  <script>
+    const video = document.getElementById('video');
+
+    function handler(entries) {
+      
+      const videoEntry = entries[0];
+      if(videoEntry.isIntersecting) {
+          video?.play();
+      } else {
+          video?.pause();
+      }
+    }
+
+    const observer = new IntersectionObserver(handler, );
+    observer.observe(video);
+
+  </script>
+</body>
+</html>
+
