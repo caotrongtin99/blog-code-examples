@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from 'react-query'
 
 import { PostDetail } from "./PostDetail";
 const maxPostPage = 10;
@@ -15,12 +16,16 @@ export function Posts() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   // replace with useQuery
-  const data = [];
-
-  return (
+  const { data, isError, isLoading, isFetching } = useQuery('post', fetchPosts, {
+    staleTime: 2000
+  })
+  console.log({ isError, isLoading })
+  return ( 
     <>
+    {isFetching && <div>Fetching...</div>}
+    {isLoading && <div>Loading...</div>} 
       <ul>
-        {data.map((post) => (
+        {data && data.map((post) => (
           <li
             key={post.id}
             className="post-title"
@@ -36,7 +41,7 @@ export function Posts() {
         </button>
         <span>Page {currentPage + 1}</span>
         <button disabled onClick={() => {}}>
-          Next page
+          Next page,
         </button>
       </div>
       <hr />
