@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery } from 'react-query'
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from 'react-query'
 
 import { PostDetail } from "./PostDetail";
 async function fetchPosts(pageNum) {
@@ -13,11 +13,16 @@ export function Posts() {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  // replace with useQuery
-  const { data, isError, isLoading, isFetching } = useQuery(['post', currentPage], () => fetchPosts(currentPage), {
-    staleTime: 2000
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    queryClient.prefetchQuery(['posts', currentPage + 1], () => fetchPosts(currentPage + 1))
+  }, [currentPage, queryClient])
+
+  const { data, isLoading, isFetching } = useQuery(['posts', currentPage], () => fetchPosts(currentPage), {
+    staleTime: 10000, keepPreviousData: true
   })
-  console.log({ isError, isLoading })
+
   return ( 
     <>
     {isFetching && <div>Fetching...</div>}
