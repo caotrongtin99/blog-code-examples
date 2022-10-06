@@ -20,10 +20,11 @@ export function Posts() {
   }, [currentPage, queryClient])
 
   const { data, isLoading, isFetching } = useQuery(['posts', currentPage], () => fetchPosts(currentPage), {
-    staleTime: 10000, keepPreviousData: true
+    staleTime: 10000,
+    keepPreviousData: true
   })
 
-  return ( 
+  return (
     <>
     {isFetching && <div>Fetching...</div>}
     {isLoading && <div>Loading...</div>} 
@@ -39,7 +40,7 @@ export function Posts() {
         ))}
       </ul>
       <div className="pages">
-        <button disabled={currentPage <= 1} onClick={() => { setCurrentPage(prev => prev - 1)}}>
+        <button disabled={currentPage === 0} onClick={() => { setCurrentPage(prev => prev - 1)}}>
           Previous page
         </button>
         <span>Page {currentPage + 1}</span>
