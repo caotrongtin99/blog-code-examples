@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useQuery } from 'react-query';
 
 import type { Staff } from '../../../../../shared/types';
 import { axiosInstance } from '../../../axiosInstance';
@@ -18,9 +19,8 @@ interface UseStaff {
 }
 
 export function useStaff(): UseStaff {
-  // for filtering staff by treatment
   const [filter, setFilter] = useState('all');
-  const staff = [];
+  const { data: staff = [] } = useQuery(queryKeys.staff, getStaff);
 
   return { staff, filter, setFilter };
 }

@@ -16,8 +16,8 @@ export function InfiniteSpecies() {
       getNextPageParam: (lastPage) => lastPage.next
     }
   )
-  console.log({ data })
-  return <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
+
+return <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
     {data && data.pages.map(page => {
       return page.results.map(item => (<Species
         key={item.name}
