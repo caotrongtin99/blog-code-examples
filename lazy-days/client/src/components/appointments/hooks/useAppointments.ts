@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // @ts-nocheck
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { axiosInstance } from '../../../axiosInstance';
@@ -42,6 +48,13 @@ export function useAppointments(): UseAppointments {
 
   const { user } = useUser();
 
+  const selectFn = useCallback(
+    (data) => {
+      getAvailableAppointments(data, user);
+    },
+    [user],
+  );
+
   const queryClient = useQueryClient();
   useEffect(() => {
     const nextMonthYear = getNewMonthYear(monthYear, 1);
@@ -54,17 +67,10 @@ export function useAppointments(): UseAppointments {
   const { data: appointments = [] } = useQuery(
     [queryKeys.treatments, monthYear.year, monthYear.month],
     () => getAppointments(monthYear.year, monthYear.month),
+    {
+      select: showAll ? undefined : selectFn,
+    },
   );
 
-  /** ****************** END 3: useQuery  ******************************* */
-
   return { appointments, monthYear, updateMonthYear, showAll, setShowAll };
-}
-
-export function usePrefetchAppointments({ month, year }): void {
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    queryClient.prefetchQuery([queryKeys.treatments, year, month]);
-  }, [month, queryClient, year]);
 }
