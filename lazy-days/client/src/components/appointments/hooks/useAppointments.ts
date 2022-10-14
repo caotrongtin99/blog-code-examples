@@ -56,11 +56,16 @@ export function useAppointments(): UseAppointments {
   );
 
   const queryClient = useQueryClient();
+
   useEffect(() => {
     const nextMonthYear = getNewMonthYear(monthYear, 1);
     queryClient.prefetchQuery(
       [queryKeys.treatments, nextMonthYear.year, nextMonthYear.month],
       () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+      {
+        staleTime: 0,
+        cacheTime: 300000,
+      },
     );
   }, [monthYear, queryClient]);
 
@@ -68,7 +73,13 @@ export function useAppointments(): UseAppointments {
     [queryKeys.treatments, monthYear.year, monthYear.month],
     () => getAppointments(monthYear.year, monthYear.month),
     {
-      select: showAll ? undefined : selectFn,
+      select: showAll ? undefined : (data) => selectFn(data),
+      staleTime: 0,
+      cacheTime: 300000,
+      refetchOnMount: true,
+      refetchOnReconnect: true,
+      refetchOnWindowFocus: true,
+      refetchInterval: 60000, // 60 seconds
     },
   );
 

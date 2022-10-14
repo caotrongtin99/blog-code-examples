@@ -20,7 +20,8 @@ async function getUserAppointments(
 export function useUserAppointments(): Appointment[] {
   const { user } = useUser();
 
-  const { data = [] } = useQuery(
+  const fallback: Appointment[] = [];
+  const { data = fallback } = useQuery(
     `${queryKeys.user}-${queryKeys.appointments}`,
     () => getUserAppointments(user),
     {
